@@ -1,0 +1,24 @@
+# This is the official YUM repository string for the glite 3.1 TORQUE_client 
+# Fetched from: http://grid-deployment.web.cern.ch/grid-deployment/yaim/repos/glite-TORQUE_client_sl5.repo
+# Place it to /etc/yum.repos.d/ and run 'yum update' 
+
+[glite-TORQUE_client]
+name=gLite 3.1 TORQUE client
+baseurl=http://glitesoft.cern.ch/EGEE/gLite/R3.2/glite-TORQUE_client/sl5/x86_64/RPMS.release/
+gpgkey=http://glite.web.cern.ch/glite/glite_key_gd.asc
+gpgcheck=1
+enabled=1
+
+[glite-TORQUE_updates]
+name=gLite 3.1 TORQUE updates
+baseurl=http://glitesoft.cern.ch/EGEE/gLite/R3.2/glite-TORQUE_client/sl5/x86_64/RPMS.updates/
+gpgkey=http://glite.web.cern.ch/glite/glite_key_gd.asc
+gpgcheck=1
+enabled=1
+
+[glite-TORQUE_externals]
+name=gLite 3.1 TORQUE externals
+baseurl=http://glitesoft.cern.ch/EGEE/gLite/R3.2/glite-TORQUE_client/sl5/x86_64/RPMS.externals/
+gpgkey=http://glite.web.cern.ch/glite/glite_key_gd.asc
+gpgcheck=0
+enabled=1

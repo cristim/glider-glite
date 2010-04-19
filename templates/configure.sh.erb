@@ -1,0 +1,3 @@
+#!/bin/sh
+/opt/glite/yaim/bin/yaim -c -s /etc/glite/site-info.def <% node_type.each do | type | -%>-n <%= type -%> <% end -%>
+

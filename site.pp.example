@@ -1,0 +1,58 @@
+# gLite Configurator example
+
+# some stuff common to all the managed gLite nodes
+class site_common{
+    import "glider-common"
+    include glider_common
+    import "glider-glite"
+    repos{["rpmforge", "scl", "gridmosi", "HellasGrid"]:}
+    package{["lcg-CA", "seegrid", "GridAUTH-vomscert", "IRB-vomscert", "GridMOSI-vomscert", "ca_GridMOSI"]:
+        ensure => latest,
+        require => Repos["rpmforge", "scl", "gridmosi", "HellasGrid"]
+    }
+    
+    config_site{utcluj:
+    site_name => "RO-09-UTCN",
+    site_email => "admin@example.com",
+    site_domain => "mosigrid.utcluj.ro",
+    vos=> ["seegrid", "ops", "gridmosi.ici.ro", "ops.vo.egee-see.org", "env.see-grid-sci.eu", "dteam", "see"],
+    apel_passwd => "hackme",
+    mysql_passwd => "hackme",
+    lfc_passwd => "hackme",
+    dpm_passwd => "hackme",
+    dpm_info_passwd => "hackme",
+    }
+}
+
+# node-dependent stuff
+node /^ce\d+/ {
+    include site_common
+    glite_node{ce:
+        node_type => ["creamCE", "BDII_site", "TORQUE_utils", "TORQUE_server", "MPI_CE"],
+        yum_repos => ["lcg-CA", "glite-CREAM", "glite-BDII", "glite-TORQUE_utils", "glite-TORQUE_server"],
+        install_yum_groups => ["glite-BDII", "glite-CREAM", "glite-TORQUE_utils", "glite-TORQUE_server"],
+    }
+}
+
+node /^se\d+/ {
+    include site_common
+    glite_node{se:
+        node_type => "SE_dpm_mysql",
+        yum_repos => ["lcg-CA", "glite-SE_dpm_mysql"]
+        install_yum_groups => ["glite-SE_dpm_mysql"],
+    }
+}
+
+node /^wn\d+/ {
+    include site_common
+    glite_node{wn:
+        node_type => ["WN","TORQUE_client", "MPI"],
+        yum_repos => ["lcg-CA", "glite-WN", "glite-TORQUE_client", "glite-MPI_utils"],
+        install_yum_groups => ["glite-WN"],
+    }
+        package{["openmpi-libs", "mpich", "glite-yaim-mpi", "mpiexec", "openmpi" ]:
+                require => Repos["lcg-CA", "glite-WN", "glite-TORQUE_client", "glite-MPI_utils"],
+                ensure => installed,
+            }
+}
+

@@ -1,0 +1,6 @@
+[gridmosi]
+name=GridMOSI VO Repository
+baseurl=ftp://ftp.gridmosi.ro/rpms
+gpgcheck=0
+enabled=1
+

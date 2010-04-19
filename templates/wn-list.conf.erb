@@ -1,0 +1,6 @@
+<% 1.upto(wn_count.to_i) do |i|
+l=wn_digits.to_i
+k=((100000+i).to_s)[-1*l,l]
+-%>
+<%= wn_prefix+k %>.<%= site_domain %>
+<% end -%>

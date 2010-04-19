@@ -1,0 +1,16 @@
+This is a configurator for the gLite grid middleware, implemented using puppet.
+
+It aims to be very easy to use and to integrate seamlessly with the puppet infrastructure 
+that you may already use. Just see site.pp.example on how you should use it.
+
+This software was written in 2010 by Cristian Măgherușan-Stanciu, as part of the MSc. thesis 
+project at the Technical University of Cluj-Napoca, Romania.
+
+I hereby place all of it under the public domain, so feel free to use it for any purpose.
+
+Still, I'd appreciate if you would give me any feedback, and patches are always welcome.
+
+Thanks for using it, and I hope you enjoy it as much as I enjoyed writing it.
+
+Cristian Măgherușan-Stanciu,
+April 2010

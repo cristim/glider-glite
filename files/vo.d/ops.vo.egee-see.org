@@ -1,0 +1,5 @@
+SW_DIR=$VO_SW_DIR/seeops
+DEFAULT_SE=$DPM_HOST
+VOMS_SERVERS="vomss://voms.grid.auth.gr:8443/voms/ops.vo.egee-see.org?/ops.vo.egee-see.org"
+VOMSES="'ops.vo.egee-see.org voms.grid.auth.gr 15120 /C=GR/O=HellasGrid/OU=auth.gr/CN=voms.grid.auth.gr ops.vo.egee-see.org'"
+VOMS_CA_DN="'/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006'"

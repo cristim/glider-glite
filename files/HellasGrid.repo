@@ -1,0 +1,5 @@
+[HellasGrid]
+name=HellasGrid General Repository
+baseurl=http://rpm.hellasgrid.gr/yum/HellasGrid/sl4/$basearch
+gpgcheck=0
+enabled=1

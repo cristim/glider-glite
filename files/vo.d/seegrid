@@ -1,0 +1,10 @@
+SW_DIR=$VO_SW_DIR/seegrid
+DEFAULT_SE=$DPM_HOST
+VOMS_SERVERS="'vomss://voms.irb.hr:8443/voms/seegrid?/seegrid' 
+        'vomss://voms.grid.auth.gr:8443/voms/seegrid?/seegrid'
+                "
+VOMSES="'seegrid voms.irb.hr 15010 /C=HR/O=edu/OU=irb/CN=host/voms.irb.hr seegrid' 
+        'seegrid voms.grid.auth.gr 15040 /C=GR/O=HellasGrid/OU=auth.gr/CN=voms.grid.auth.gr seegrid'
+        "
+VOMS_CA_DN="'/C=HR/O=edu/OU=srce/CN=SRCE CA' '/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006'"
+

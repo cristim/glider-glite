@@ -1,0 +1,6 @@
+[scl]
+name=SEE-GRID repo maintained by SCL
+baseurl=http://rpm.scl.rs/scl/sl5/$basearch/RPMS.scl
+gpgcheck=0
+enabled=1
+

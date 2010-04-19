@@ -1,0 +1,25 @@
+
+# This is the official YUM repository string for the glite 3.2 glite-SE_dpm_disk
+# Fetched from: http:///grid-deployment.web.cern.ch/grid-deployment/yaim/repos/glite-SE_dpm_disk.repo
+# Place it to /etc/yum.repos.d/ and run 'yum update' 
+
+[glite-SE_dpm_disk]
+name=gLite 3.2 glite-SE_dpm_disk
+baseurl=http://glitesoft.cern.ch/EGEE/gLite/R3.2/glite-SE_dpm_disk/sl5/x86_64/RPMS.release/
+gpgkey=http://glite.web.cern.ch/glite/glite_key_gd.asc
+gpgcheck=1
+enabled=1
+
+[glite-SE_dpm_disk_updates]
+name=gLite 3.2 glite-SE_dpm_disk
+baseurl=http://glitesoft.cern.ch/EGEE/gLite/R3.2/glite-SE_dpm_disk/sl5/x86_64/RPMS.updates/
+gpgkey=http://glite.web.cern.ch/glite/glite_key_gd.asc
+gpgcheck=1
+enabled=1
+
+
+[glite-SE_dpm_disk_ext]
+name=gLite 3.2 glite-SE_dpm_disk
+baseurl=http://glitesoft.cern.ch/EGEE/gLite/R3.2/glite-SE_dpm_disk/sl5/x86_64/RPMS.externals/
+gpgcheck=0
+enabled=1

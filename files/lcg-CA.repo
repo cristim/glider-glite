@@ -1,0 +1,11 @@
+# This is the official YUM repository string for the lcg-CA repository
+# Fetched from: http://grid-deployment.web.cern.ch/grid-deployment/glite/repos/3.1/lcg-CA.repo
+# Place it to /etc/yum.repos/3.1.d/ and run 'yum update' 
+
+[lcg-CA]
+name=CAs
+baseurl=http://linuxsoft.cern.ch/LCG-CAs/current
+gpgkey=https://dist.eugridpma.info/distribution/igtf/current/GPG-KEY-EUGridPMA-RPM-3
+       http://glite.web.cern.ch/glite/glite_key_gd.asc
+gpgcheck=1
+enabled=1

@@ -1,0 +1,6 @@
+SW_DIR=$VO_SW_DIR/dteam
+DEFAULT_SE=$DPM_HOST
+VOMS_SERVERS='vomss://voms.cern.ch:8443/voms/dteam?/dteam/'
+VOMSES="'dteam lcg-voms.cern.ch 15004 /DC=ch/DC=cern/OU=computers/CN=lcg-voms.cern.ch dteam 24' 'dteam voms.cern.ch 15004 /DC=ch/DC=cern/OU=computers/CN=voms.cern.ch dteam 24'"
+VOMS_CA_DN="'/DC=ch/DC=cern/CN=CERN Trusted Certification Authority' '/DC=ch/DC=cern/CN=CERN Trusted Certification Authority'"
+

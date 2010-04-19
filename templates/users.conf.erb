@@ -1,0 +1,25 @@
+<% 
+# remove "." and "-" from VO names, since those are illegal in queue names
+queues = vos.dup.collect! {|vo| vo.gsub(/[.-]/,"") }
+
+uid=20000 #uid base
+group_size=200
+prd_size=10
+
+vos.each_with_index do |vo, i|
+gid=uid/10
+    for k in 1..(group_size.to_i) -%>
+<%= (uid.to_i+k).to_s+":"+queues[i]+(((k+10000).to_s)[2,3])+":"+(gid).to_s+":"+queues[i]+":"+vo+"::"%>
+<% end
+uid+=800
+for k in 1..(prd_size.to_i) -%>
+<%= (uid.to_i+k).to_s+":prd"+queues[i]+(((k+10000).to_s)[2,3])+":"+(uid/10).to_s+","+(gid).to_s+":prd"+queues[i]+","+queues[i]+":"+vo+":prd"%>
+<% end
+uid+=100
+for k in 1..(prd_size.to_i) -%>
+<%= (uid.to_i+k).to_s+":sgm"+queues[i]+(((k+10000).to_s)[2,3])+":"+(uid/10).to_s+","+(gid).to_s+":sgm"+queues[i]+","+queues[i]+":"+vo+":sgm"%>
+<% end
+uid+=100
+end
+-%>
+

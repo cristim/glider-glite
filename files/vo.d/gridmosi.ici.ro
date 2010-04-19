@@ -1,0 +1,10 @@
+SW_DIR=$VO_SW_DIR/gridmosi
+DEFAULT_SE=$DPM_HOST
+VOMS_SERVERS="vomss://voms.grid.ici.ro:8443/voms/gridmosi.ici.ro"
+VOMSES=" 'gridmosi.ici.ro voms.grid.ici.ro 15002 /DC=RO/DC=RomanianGRID/O=ICI/CN=voms.grid.ici.ro gridmosi.ici.ro' 
+'gridmosi.ici.ro voms.grid.info.uvt.ro 15002 /DC=RO/DC=RomanianGRID/O=UVT/CN=voms.grid.info.uvt.ro gridmosi.ici.ro'
+"
+VOMS_CA_DN="'/DC=RO/DC=RomanianGRID/O=ROSA/OU=Certification Authority/CN=RomanianGRID CA'
+        '/DC=RO/DC=RomanianGRID/O=ROSA/OU=Certification Authority/CN=RomanianGRID CA'
+        "
+

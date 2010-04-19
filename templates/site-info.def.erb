@@ -1,0 +1,483 @@
+#############################################################################
+# Copyright (c) Members of the EGEE Collaboration. 2004. 
+# See http://www.eu-egee.org/partners/ for details on the copyright 
+# holders.  
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); 
+# you may not use this file except in compliance with the License. 
+# You may obtain a copy of the License at 
+#
+#    http://www.apache.org/licenses/LICENSE-2.0 
+#
+# Unless required by applicable law or agreed to in writing, software 
+# distributed under the License is distributed on an "AS IS" BASIS, 
+# WITHOUT WARRANTIES OR CONDITIONS 
+# OF ANY KIND, either express or implied. 
+# See the License for the specific language governing permissions and 
+# limitations under the License.
+##############################################################################
+#
+# NAME :        site-info.def
+#
+# DESCRIPTION : This is the main configuration file needed to execute the
+#               yaim command. It contains a list of the variables needed to
+#               configure a service.
+#
+# AUTHORS :     yaim-contact@cern.ch
+#
+# NOTES :       - site-info.def will contain the list of variables
+#                 common to multiple node types. We have started to  move
+#                 towards a new approach where node type specific variables are 
+#                 distributed by its corresponding module. Although a unique 
+#                 site-info.def can still be used at configuration time.
+#               
+#               - Service specific variables will be distributed under 
+#                 /opt/glite/yaim/examples/siteinfo/services/glite_<node_type_name>
+#                 The definition of the variables can be done there or copy them in site-info.def.  
+#
+#               - site-info.pre and site-info.post will contain default variables. When sys admins
+#                 want to set their own values, they can just define the variable in site-info.def
+#                 and that will overwrite the value in site-info.pre/post.
+#
+#               - VO variables are currently distributed for a number of VOs with
+#                 real values that can be directly used by sys admins.
+#                 We have started to move towards a new approach where yaim will no longer distribute
+#                 these variables. Instead, VO values will be downloaded directly from the CIC
+#                 portal and will be integrated using the YAIM configurator.
+#
+#               - For more information on YAIM, please check:
+#                 https://twiki.cern.ch/twiki/bin/view/EGEE/YAIM
+#
+#               - For more details on the CIC portal, visit:
+#                 http://cic.in2p3.fr/
+#                 To know more about the YAIM configurator go to the VO management section.
+#
+# YAIM MODULE:  glite-yaim-core
+#                 
+##############################################################################
+
+<%
+queues = vos.dup.collect {|vo| vo.gsub(/[.-]/,"") }
+%>
+###################################
+# General configuration variables #
+###################################
+CONFIG_DIR=<%= glite_conf_dir %>
+# List of the batch nodes hostnames.
+# An example file is available in ${INSTALL_ROOT}/glite/yaim/examples/wn-list.conf
+# Change the path according to your site settings.
+WN_LIST=${CONFIG_DIR}/wn-list.conf
+
+# List of unix users to be created in the service nodes.
+# The format is as follows:
+# UID:LOGIN:GID1,GID2,...:GROUP1,GROUP2,...:VO:FLAG:
+# An example file is available in ${INSTALL_ROOT}/glite/yaim/examples/users.conf
+# Change the path according to your site settings.
+# For more information please check ${INSTALL_ROOT}/glite/yaim/examples/users.conf.README 
+USERS_CONF=${CONFIG_DIR}/users.conf
+
+# List of the local accounts which a user should be mapped to.
+# The format is as follows:
+# "VOMS_FQAN":GROUP:GID:FLAG:[VO]
+# An example file is available in ${INSTALL_ROOT}/glite/yaim/examples/groups.conf
+# Change the path according to your site settings.
+# For more information please check ${INSTALL_ROOT}/glite/yaim/examples/groups.conf.README
+# NOTE: comment out this variable if you want to specify a groups.conf per VO
+# under the group.d/ directory.
+GROUPS_CONF=${CONFIG_DIR}/groups.conf
+
+# Uncomment this variable if you want to specify a local groups.conf 
+# It is similar to GROUPS_CONF but used to specify a separate file
+# where local accounts specific to the site are defined.
+# LOCAL_GROUPS_CONF=my_local_groups.conf
+
+# gLite pool account home directory
+# Please, uncomment this variable if you want to specify a home directory different from /home
+# for the user accounts specified in USERS_CONF.
+# USER_HOME_PREFIX=my_home_directory
+
+# MySQL admin password. Choose a good password!
+MYSQL_PASSWORD=<%= mysql_passwd -%>
+
+# Uncomment this variable if you want to explicitely use pool
+# accounts for special users when generating the grid-mapfile.
+# If not defined, YAIM will decide whether to use special 
+# pool accounts or not automatically
+# SPECIAL_POOL_ACCOUNTS=yes or no
+
+################################
+# Site configuration variables #
+################################
+
+# The contact e-mail of your site
+SITE_EMAIL=<%= site_email %>
+SITE_SECURITY_EMAIL=$SITE_EMAIL
+SITE_SUPPORT_EMAIL=$SITE_EMAIL
+
+#SITE_TIER=2
+#SITE_SUPPORT_SITE=RO-01-ICI
+
+# The name of your site
+SITE_NAME=<%= site_name %>
+SITE_DESC=$SITE_NAME
+
+# Coordinates of the place where your site is located
+SITE_LAT=<%= site_lat -%> # -90 to 90 degrees
+SITE_LONG=<%= site_long -%> # -180 to 180 degrees
+SITE_LOC=<%= site_loc %>
+SITE_WEB=<%= site_web %>
+
+# Uncomment this variable if your site has an http proxy
+# in order to reduce the load on the CA host
+#SITE_HTTP_PROXY="http-proxy.my.domain"
+
+MY_DOMAIN=<%= site_domain %>
+SITE_OTHER_GRID="WLCG|EGEE"
+
+JAVA_LOCATION="<%= java_location -%>"
+
+##############################
+# CE configuration variables #
+##############################
+
+CE_HOST=<%= ce_host -%>.$MY_DOMAIN
+REG_HOST=lcgic01.gridpp.rl.ac.uk
+
+# Architecture and enviroment specific settings. Edit them in the ERB template.
+CE_CPU_MODEL=PIV
+CE_CPU_VENDOR=Intel
+CE_CPU_SPEED=3200
+CE_OS="CentOS"
+CE_OS_RELEASE="5.4"
+CE_OS_VERSION="Final"
+# CE_OS_ARCH should be set to result of `uname -m` runned on WN
+CE_OS_ARCH=x86_64
+CE_MINPHYSMEM=2048
+CE_MINVIRTMEM=2048
+CE_PHYSCPU=10
+CE_LOGCPU=20
+CE_SMPSIZE=2
+CE_SI00=1100
+CE_SF00=1200
+CE_OUTBOUNDIP=TRUE
+CE_INBOUNDIP=FALSE
+CE_RUNTIMEENV="
+    LCG-2
+    LCG-2_1_0
+    LCG-2_1_1
+    LCG-2_2_0
+    LCG-2_3_0
+    LCG-2_3_1
+    LCG-2_4_0
+    LCG-2_5_0
+    LCG-2_6_0
+    LCG-2_7_0
+    GLITE-3_0_0
+    GLITE-3_1_0
+    R-GMA
+    MPICH 
+    MPICH-1.2.7"
+
+########################################
+# Batch server configuration variables #
+########################################
+
+# Change this if your batch server is not on the CE
+BATCH_SERVER=$CE_HOST
+
+# Jobmanager specific settings. Please, define:
+# lcgpbs, lcglfs, lcgsge or lcgcondor
+JOB_MANAGER=pbs
+
+# torque, lsf, sge or condor
+CE_BATCH_SYS=pbs
+BATCH_LOG_DIR=/var/spool/pbs/server_priv/accounting
+BATCH_VERSION=<%= torque_version -%>
+
+################################
+# APEL configuration variables #
+################################
+
+APEL_DB_PASSWORD=<%= apel_passwd %>
+
+##########################################
+# Gridice server configuration variables #
+##########################################
+
+# GridIce server host name (usually run on the MON node).
+GRIDICE_SERVER_HOST=$MON_HOST
+
+##############################
+# RB configuration variables #
+##############################
+
+RB_HOST=testbed005.grid.ici.ro
+
+###############################
+# WMS configuration variables #
+###############################
+
+WMS_HOST=wms.ipb.ac.rs
+
+###################################
+# myproxy configuration variables #
+###################################
+
+#PX_HOST=myproxy.ipb.ac.rs
+PX_HOST=myproxy.egee-see.org
+
+# WARNING: This variable will be moved to the yaim myproxy module soon
+# since it is only unsed by Myproxy 
+# This variable contains the DNs of services (RBs and FTS) allowed to renew/retrives
+# credentials from/at the myproxy server. Put single quotes around each trusted DN !!!
+GRID_TRUSTED_BROKERS="
+'/C=RS/O=AEGIS/OU=Institute of Physics Belgrade/CN=host/rb.ipb.ac.rs'
+'/C=RS/O=AEGIS/OU=Institute of Physics Belgrade/CN=host/wms.ipb.ac.rs'
+'/C=TR/O=TRGrid/OU=TUBITAK-ULAKBIM/CN=rb.ulakbim.gov.tr'
+'/C=TR/O=TRGrid/OU=TUBITAK-ULAKBIM/CN=wms.ulakbim.gov.tr'
+"
+
+################################
+# RGMA configuration variables #
+################################
+
+MON_HOST=<%= mon_host -%>.$MY_DOMAIN
+
+###################################
+# FTS configuration variables #
+###################################
+
+#FTS_HOST=my-fts.$MY_DOMAIN
+#FTS_SERVER_URL="https://fts.${MY_DOMAIN}:8443/path/glite-data-transfer-fts"
+
+FTS_SERVER_URL=""
+
+###############################
+# LFC configuration variables #
+###############################
+# WARNING: These variables will be moved to the yaim lfc module soon
+# since they are only used by LFC
+
+LFC_HOST=lfc01.$MY_DOMAIN
+
+LFC_DB_PASSWORD=<%= lfc_passwd -%>
+
+# Default value is to put the standard database on the LFC host
+LFC_DB_HOST=$LFC_HOST
+LFC_DB=cns_db
+
+# If you use a DNS alias in front of your LFC, specify it here
+#LFC_HOST_ALIAS=""
+
+# All catalogues are local unless you add a VO to
+# LFC_CENTRAL, in which case that will be central
+LFC_CENTRAL="gridmosi.ici.ro env.see-grid-sci.eu"
+
+# If you want to limit the VOs your LFC serves, add the locals here
+LFC_LOCAL="seegrid ops ops.vo.egee-see.org dteam"
+
+######################################
+# SE classic configuration variables #
+######################################
+
+#CLASSIC_STORAGE_DIR="/storage"
+
+###############################
+# DPM configuration variables #
+###############################
+# WARNING: These variables except DPM_HOST will be moved to the yaim dpm module soon
+# since they are only used by DPM
+
+# DPMDATA is now deprecated. Use an entry like $DPM_HOST:/filesystem in
+# the DPM_FILESYSTEMS variable.
+# From now on we use DPM_DB_USER and DPM_DB_PASSWORD to make clear
+# its different role from that of the dpmmgr unix user who owns the
+# directories and runs the daemons.
+
+# The name of the DPM head node 
+DPM_HOST=<%= dpm_host -%>.$MY_DOMAIN
+
+# The DPM pool name (max 15 character long name)
+DPMPOOL=MY_DPM_POOL
+
+# The filesystems/partitions parts of the pool
+#DPM_FILESYSTEMS="$DPM_HOST:/path1 my-dpm-poolnode.$MY_DOMAIN:/path2"
+DPM_FILESYSTEMS="$DPM_HOST:/dpm_storage"
+
+# The database user
+DPM_DB_USER=dpm_db_user
+
+# The database user password
+DPM_DB_PASSWORD=<%= dpm_passwd -%>
+
+# The DPM database host
+DPM_DB_HOST=$DPM_HOST
+
+# The DPM db name. Default is dpm_db
+# DPM_DB=dpm_db
+
+# The DPNS db name. Default is cns_db
+# DPNS_DB=cns_db
+
+# The DPM infosystem user name
+DPM_INFO_USER=dpm_info_user
+
+# The DPM infosystem user password
+DPM_INFO_PASS=<%= dpm_info_passwd -%>
+
+# Specifies the default amount of space reserved  for a file
+DPMFSIZE=200M
+
+# Variable for the port range  - Optional, default value is shown
+# RFIO_PORT_RANGE="20000 25000" 
+
+GLOBUS_TCP_PORT_RANGE="20000,25000"
+
+###########
+# SE_LIST #
+###########
+
+# Space separated list of SEs hostnames
+SE_LIST="$DPM_HOST"
+
+#############################################
+# GRIDFTP logfile location variable for SEs #
+#############################################
+
+# Variable necessary to configure Gridview service client on the SEs.
+# It sets the location and filename of the gridftp server logfile on 
+# different types of SEs. Needed gridftp logfile for gridview is the 
+# netlogger file which contain info for each transfer (created with
+# -Z/-log-transfer option for globus-gridftp-server). 
+# Ex: DATE=20071206082249.108921 HOST=hostname.cern.ch PROG=globus-gridftp-server 
+# NL.EVNT=FTP_INFO START=20071206082248.831173 USER=atlas102 FILE=/storage/atlas/ 
+# BUFFER=0 BLOCK=262144 NBYTES=330 VOLUME=/ STREAMS=1 STRIPES=1 DEST=[127.0.0.1] 
+# TYPE=LIST CODE=226
+# Default locations for DPM: /var/log/dpm-gsiftp/dpm-gsiftp.log
+#            and SE_classic: /var/log/globus-gridftp.log
+
+#SE_GRIDFTP_LOGFILE=path_to_gridftp_logfile.log
+SE_GRIDFTP_LOGFILE=/var/log/dpm-gsiftp/dpm-gsiftp.log
+
+################################
+# BDII configuration variables #
+################################
+
+BDII_HOST=testbed005.grid.ici.ro
+SITE_BDII_HOST=$CE_HOST
+
+# Uncomment this variable if you want to define a list of
+# top level BDIIs to support the automatic failover in the GFAL clients 
+# BDII_LIST=my-bdii1.$MY_DOMAIN:port1[,my-bdii22.$MY_DOMAIN:port2[...]] 
+
+#BDII_HTTP_URL="http://bdii.phy.bg.ac.yu/lcg2-all-sites.conf"
+BDII_HTTP_URL="http://hgsm.grid.org.tr/export/see-grid_all_sites.php"
+BDII_FCR="http://goc.grid-support.ac.uk/gridsite/bdii/BDII/www/bdii-update.ldif"
+# Ex.: BDII_REGIONS="CE SE RB PX VOBOX"
+
+# Advertise in BDII_REGIONS just services YOUR SITE PROVIDES! Comment out URLs
+# for services not provided!
+BDII_REGIONS="CE DPM LFC MON"    # list of the services provided by the site
+
+BDII_CE_URL="ldap://$CE_HOST:2170/mds-vo-name=resource,o=grid"
+BDII_DPM_URL="ldap://$DPM_HOST:2170/mds-vo-name=resource,o=grid"
+BDII_LFC_URL="ldap://$LFC_HOST:2170/mds-vo-name=resource,o=grid"
+BDII_MON_URL="ldap://$MON_HOST:2170/mds-vo-name=resource,o=grid"
+
+# BDII/GIP specific settings 
+BDII_SITE_TIMEOUT=120 
+BDII_RESOURCE_TIMEOUT=`expr "$BDII_SITE_TIMEOUT" - 5` 
+GIP_RESPONSE=`expr "$BDII_RESOURCE_TIMEOUT" - 5`
+GIP_FRESHNESS=60 
+GIP_CACHE_TTL=300 
+GIP_TIMEOUT=150 
+
+
+##############################
+# VO configuration variables #
+##############################
+#
+# This file contains variables defined for the following VOs
+# atlas
+# alice
+# lhcb
+# cms
+# dteam
+# biomed
+# ops
+#
+# Edit the following set of variables if you want to configure a different VO:
+# VO_<vo_name>_SW_DIR
+# VO_<vo_name>_DEFAULT_SE
+# VO_<vo_name>_STORAGE_DIR 
+# VO_<vo_name>_VOMS_SERVERS
+# VO_<vo_name>_VOMSES
+# VO_<vo_name>_VOMS_CA_DN
+# VO_<vo_name>_VOMS_EXTRA_MAPS (optional)
+# VO_<vo_name>_LB_HOSTS (optional)
+# VO_<vo_name>_WMS_HOSTS (optional)
+# VO_<vo_name>_PX_HOST (optional)
+# 
+# If you are configuring a DNS-like VO, please check
+# the following URL: https://twiki.cern.ch/twiki/bin/view/LCG/YaimGuide400#vo_d_directory
+#
+# IMPORTANT! Please, take into account that in the future YAIM will no longer provide VO
+# related variables for these VOs. This information should be obtained out of the CIC portal:
+# http://cic.in2p3.fr/
+#
+# The VO variables will be automatically generated by the YAIM configurator and integrated in YAIM. 
+
+# Space separated list of supported VOs by your site
+VOS='<% vos.each do |vo| -%><%= vo %> <% end -%>'
+QUEUES='<% queues.each do |queue| -%><%= queue %> <% end -%>'
+
+# For each queue define a _GROUP_ENABLE variable which is a list
+# of VO names and VOMS FQANs
+# Ex.: MYQUEUE_GROUP_ENABLE="ops atlas cms /cms/Higgs"
+# In DNS like VO names dots and dashes shoul be replaced with underscore:
+# Ex.: MYQUEUE_GROUP_ENABLE="my.test-queue"
+#      MY_TEST_QUEUE_GROUP_ENABLE="ops atlas"
+
+SEEGRID_GROUP_ENABLE="seegrid /VO=seegrid/GROUP=/seegrid/ROLE=ops /VO=seegrid/GROUP=/seegrid/ROLE=sgmadmin"
+GRIDMOSI_GROUP_ENABLE="gridmosi.ici.ro"
+ENVIR_GROUP_ENABLE="env.see-grid-sci.eu /VO=env.see-grid-sci.eu/GROUP=/env.see-grid-sci.eu/ROLE=sgmadmin /VO=env.see-grid-sci.eu/GROUP=/env.see-grid-sci.eu/ROLE=ops"
+SEEOPS_GROUP_ENABLE="ops.vo.egee-see.org /VO=ops.vo.egee-see.org/GROUP=/ops.vo.egee-see.org/ROLE=lcgadmin"
+OPS_GROUP_ENABLE="ops /VO=ops/GROUP=/ops/ROLE=lcgadmin"
+DTEAM_GROUP_ENABLE="dteam"
+SEE_GROUP_ENABLE="see"
+
+# Prefix of the experiment software directory in a site
+VO_SW_DIR=/opt/exp_soft
+
+# aux variable: default SE per VO
+#SE_HOST=my_host
+SE_HOST=<%= se_host -%>.$MY_DOMAIN
+
+DPNS_HOST=$SE_HOST
+SITE_GIIS_URL=$SE_HOST
+SE_MOUNT_INFO_LIST="$SE_HOST:/dpm_storage,none"
+CE_CAPABILITY="CPUScalingFactorSI00=100"
+CE_OTHERDESCR="Cores=2"
+
+VO_SEEGRID_DEFAULT_SE=$SE_HOST
+VO_SEE_DEFAULT_SE=$SE_HOST
+VO_OPS_DEFAULSE_HOT=$SE_HOST
+VO_GRIDMOSI_ICI_RO_DEFAULT_SE=$SE_HOST
+VO_OPS_VO_EGEE_SEE_ORG_DEFAULT_SE=$SE_HOST
+VO_ENV_SEE_GRID_SCI_EU_DEFAULT_SE=$SE_HOST
+
+#####################
+#MPI configs - deea #
+#####################
+
+MPI_MPICH_ENABLE="yes"
+
+MPI_MPICH_PATH=<%= mpich_location %>
+MPI_MPICH_VERSION=<%= mpich_version %>
+
+MPI_SHARED_HOME="yes"
+MPI_SSH_HOST_BASED_AUTH="yes"
+MPI_MPICH_MPIEXEC="/usr/bin/mpiexec"
+
+
+

@@ -1,0 +1,37 @@
+# This file is managed using puppet. Any manual edits will overwritten!!!
+# Edit instead its template stored on the puppet master node at
+# /etc/puppet/modules/glider/glider-glite/groups.conf.erb
+
+"/seegrid/ROLE=sgmadmin":::sgm:
+"/seegrid/ROLE=ops":::prd:
+"/seegrid"::::
+"/seegrid/*"::::
+
+"/gridmosi.ici.ro/ROLE=sgmadmin":::sgm:
+"/gridmosi.ici.ro/*"::::
+"/gridmosi.ici.ro"::
+
+"/env.see-grid-sci.eu/ROLE=sgmadmin":::sgm:
+"/env.see-grid-sci.eu/ROLE=ops":::prd:
+"/env.see-grid-sci.eu"::::
+"/env.see-grid-sci.eu/*"::::
+
+"/ops.vo.egee-see.org/ROLE=VO-Admin":::sgm:
+"/ops.vo.egee-see.org/ROLE=lcgadmin":::sgm:
+"/ops.vo.egee-see.org"::::
+"/ops.vo.egee-see.org/*"::::
+
+"/ops/ROLE=lcgadmin":::sgm:
+"/ops"::::
+"/ops/*"::::
+
+"/dteam/ROLE=lcgadmin":::sgm:
+"/dteam/ROLE=production":::prd:
+"/dteam"::::
+"/dteam/*"::::
+
+"/see/ROLE=seeadmin":::sgm:
+"/see"::::
+"/see/*"::::
+
+
