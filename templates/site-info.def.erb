@@ -134,7 +134,7 @@ SITE_WEB=<%= site_web %>
 MY_DOMAIN=<%= site_domain %>
 SITE_OTHER_GRID="WLCG|EGEE"
 
-JAVA_LOCATION="<%= java_location -%>"
+JAVA_LOCATION="<%= java_location if (java_location) -%>"
 
 ##############################
 # CE configuration variables #
@@ -192,7 +192,7 @@ JOB_MANAGER=pbs
 # torque, lsf, sge or condor
 CE_BATCH_SYS=pbs
 BATCH_LOG_DIR=/var/spool/pbs/server_priv/accounting
-BATCH_VERSION=<%= torque_version -%>
+BATCH_VERSION="<%= torque_version if (torque_version) -%>"
 
 ################################
 # APEL configuration variables #
@@ -472,8 +472,8 @@ VO_ENV_SEE_GRID_SCI_EU_DEFAULT_SE=$SE_HOST
 
 MPI_MPICH_ENABLE="yes"
 
-MPI_MPICH_PATH=<%= mpich_location %>
-MPI_MPICH_VERSION=<%= mpich_version %>
+MPI_MPICH_PATH="<%= mpich_location if (mpich_location) -%>"
+MPI_MPICH_VERSION="<%= mpich_version if (mpich_version) -%>"
 
 MPI_SHARED_HOME="yes"
 MPI_SSH_HOST_BASED_AUTH="yes"
