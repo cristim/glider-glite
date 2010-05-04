@@ -1,18 +1,19 @@
 # This code should get the glite middleware installed and configured on a node
 
-define glite_node($node_type, $yum_repos, $install_yum_groups){
-    repos{$yum_repos:
-        notify => Install_yum_groups[$install_yum_groups]
+define glite_node($node_type, $yum_repos, $install_yum_groups=""){
+    repos{$yum_repos:}
+    if $install_yum_groups {
+        install_yum_groups{$install_yum_groups:
+            subscribe => Repos[$yum_repos],
+        }
     }
-    install_yum_groups{$install_yum_groups:}
-    
     config_node{$hostname: node_type => $node_type}
 }
 
 
 define repos(){
     file{"/etc/yum.repos.d/$title.repo":
-        source => "puppet://puppet/modules/glider-glite/$title.repo",
+        source => "puppet://puppet/modules/glider-glite/repos/$title.repo",
     }
 }
 
@@ -59,6 +60,7 @@ define config_site($vos,
         $lfc_host   = "lfc01",
         $wn_prefix  =   "wn",
         $wn_digits  =   "2",
+        $install_cert = "",
         $wn_count,
         $mysql_passwd,
         $apel_passwd,
@@ -67,6 +69,11 @@ define config_site($vos,
         $dpm_info_passwd,
         $glite_conf_dir="/etc/glite")
        {
+
+    package{"java":
+        name => "java-1.6.0-openjdk",
+        ensure => installed,
+    }
 
     file{ ["$glite_conf_dir"]:
             ensure  => directory,
@@ -85,7 +92,7 @@ define config_site($vos,
 
     file{ "$glite_conf_dir/site-info.def":
         content => template("glider-glite/site-info.def.erb"),
-        require => File["$glite_conf_dir"],
+        require => [Package["java"],File["$glite_conf_dir","/etc/puppet/puppet.conf"]], # Puppet needs to be set up for getting facts as modules
         mode    => 600
     }
 
@@ -105,5 +112,20 @@ define config_site($vos,
         recurse => true,
         ensure => directory
     }
+    
+    if $install_cert == "true" {
+        install_cert{"$hostname":}
+    }
 
+}
+
+define install_cert($cert_name="$hostname"){
+    file{"/etc/grid-security/hostcert.pem":
+        source => "puppet://puppet/glider-glite/certs/$cert_name/hostcert.pem",
+        mode => 444,
+    }
+    file{"/etc/grid-security/hostkey.pem":
+        source => "puppet://puppet/glider-glite/certs/$cert_name/hostkey.pem",
+        mode => 400,
+    }
 }
