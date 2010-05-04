@@ -5,6 +5,8 @@ Facter.add("java_location") do
     setcode do
         if File.exist?("/usr/bin/java")
             Pathname.new("/usr/bin/java").realpath.to_s.gsub("bin\/java","").chomp
+        else
+            "/path/to/java_dir # Make sure java is installed!"
         end
     end
 end
