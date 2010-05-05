@@ -143,6 +143,11 @@ JAVA_LOCATION="<%= java_location if (java_location) -%>"
 CE_HOST=<%= ce_host -%>.$MY_DOMAIN
 REG_HOST=lcgic01.gridpp.rl.ac.uk
 
+CREAM_DB_USER=cream
+CREAM_DB_PASSWORD=<%= cream_passwd %>
+
+CEMON_HOST=<%= ce_host -%>.$MY_DOMAIN 
+
 # Architecture and enviroment specific settings. Edit them in the ERB template.
 CE_CPU_MODEL=PIV
 CE_CPU_VENDOR=Intel
@@ -439,9 +444,9 @@ QUEUES='<% queues.each do |queue| -%><%= queue %> <% end -%>'
 #      MY_TEST_QUEUE_GROUP_ENABLE="ops atlas"
 
 SEEGRID_GROUP_ENABLE="seegrid /VO=seegrid/GROUP=/seegrid/ROLE=ops /VO=seegrid/GROUP=/seegrid/ROLE=sgmadmin"
-GRIDMOSI_GROUP_ENABLE="gridmosi.ici.ro"
-ENVIR_GROUP_ENABLE="env.see-grid-sci.eu /VO=env.see-grid-sci.eu/GROUP=/env.see-grid-sci.eu/ROLE=sgmadmin /VO=env.see-grid-sci.eu/GROUP=/env.see-grid-sci.eu/ROLE=ops"
-SEEOPS_GROUP_ENABLE="ops.vo.egee-see.org /VO=ops.vo.egee-see.org/GROUP=/ops.vo.egee-see.org/ROLE=lcgadmin"
+GRIDMOSIICIRO_GROUP_ENABLE="gridmosi.ici.ro"
+ENVSEEGRIDSCIEU_GROUP_ENABLE="env.see-grid-sci.eu /VO=env.see-grid-sci.eu/GROUP=/env.see-grid-sci.eu/ROLE=sgmadmin /VO=env.see-grid-sci.eu/GROUP=/env.see-grid-sci.eu/ROLE=ops"
+OPSVOEGEESEEORG_GROUP_ENABLE="ops.vo.egee-see.org /VO=ops.vo.egee-see.org/GROUP=/ops.vo.egee-see.org/ROLE=lcgadmin"
 OPS_GROUP_ENABLE="ops /VO=ops/GROUP=/ops/ROLE=lcgadmin"
 DTEAM_GROUP_ENABLE="dteam"
 SEE_GROUP_ENABLE="see"

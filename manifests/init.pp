@@ -1,13 +1,18 @@
 # This code should get the glite middleware installed and configured on a node
 
-define glite_node($node_type, $yum_repos, $install_yum_groups=""){
+define glite_node($node_type, $yum_repos, $install_yum_groups="", $inst_cert=""){
     repos{$yum_repos:}
     if $install_yum_groups {
         install_yum_groups{$install_yum_groups:
             subscribe => Repos[$yum_repos],
+            after => Repos[$yum_repos],
+            before => Config_node["$hostname"],
         }
     }
-    config_node{$hostname: node_type => $node_type}
+    config_node{$hostname: 
+        node_type => $node_type, 
+        inst_cert => $inst_cert,
+    }
 }
 
 
@@ -23,12 +28,12 @@ define install_yum_groups(){
         command => "yum -y -d0 -e0 groupinstall \"$title\"",
         unless  => "yum grouplist \"$title\" | grep -q '^Installed Groups:$'",
         user    => "root",
-        require => Repos[$yum_repos]
     }
 }
 
 # to be used on a per-node basis
 define config_node($node_type,
+        $inst_cert="",
         $glite_conf_dir="/etc/glite"){
    
     file{ "$glite_conf_dir/configure.sh":
@@ -41,6 +46,14 @@ define config_node($node_type,
         subscribe   => File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],
         refreshonly => true,
         timeout     => "-1",
+    }
+
+    if $inst_cert == "true" {
+        install_cert{"my_cert":
+            cert_name => $hostname,
+            notify => Exec["$glite_conf_dir/configure.sh"],
+            before => Exec["$glite_conf_dir/configure.sh"],
+        }
     }
 }
 
@@ -60,10 +73,10 @@ define config_site($vos,
         $lfc_host   = "lfc01",
         $wn_prefix  =   "wn",
         $wn_digits  =   "2",
-        $install_cert = "",
         $wn_count,
         $mysql_passwd,
         $apel_passwd,
+        $cream_passwd,
         $lfc_passwd,
         $dpm_passwd,
         $dpm_info_passwd,
@@ -112,20 +125,17 @@ define config_site($vos,
         recurse => true,
         ensure => directory
     }
-    
-    if $install_cert == "true" {
-        install_cert{"$hostname":}
-    }
-
 }
 
-define install_cert($cert_name="$hostname"){
+define install_cert($cert_name){
     file{"/etc/grid-security/hostcert.pem":
         source => "puppet://puppet/glider-glite/certs/$cert_name/hostcert.pem",
-        mode => 444,
+        mode => 644,
+        owner => "root",    
     }
     file{"/etc/grid-security/hostkey.pem":
         source => "puppet://puppet/glider-glite/certs/$cert_name/hostkey.pem",
         mode => 400,
+        owner => "root",    
     }
 }
