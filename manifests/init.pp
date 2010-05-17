@@ -13,6 +13,11 @@ define glite_node($node_type, $yum_repos, $install_yum_groups="", $inst_cert="")
         node_type => $node_type, 
         inst_cert => $inst_cert,
     }
+
+    service{"yum-updatesd":     # automatic updates are bad, 'mmkay?
+        ensure => stopped,
+        enable => false,
+    }
 }
 
 
@@ -42,7 +47,7 @@ define config_node($node_type,
         require     => File["$glite_conf_dir"]
     }
     exec{ "$glite_conf_dir/configure.sh":
-        require     => File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],
+        require     => [File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],Augeas["make_hosts_entry"]],
         subscribe   => File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],
         refreshonly => true,
         timeout     => "-1",
