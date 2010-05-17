@@ -53,6 +53,7 @@ define config_node($node_type,
             cert_name => $hostname,
             notify => Exec["$glite_conf_dir/configure.sh"],
             before => Exec["$glite_conf_dir/configure.sh"],
+            require => Package["lcg-CA"],
         }
     }
 }
@@ -105,8 +106,9 @@ define config_site($vos,
 
     file{ "$glite_conf_dir/site-info.def":
         content => template("glider-glite/site-info.def.erb"),
-        require => [Package["java"],File["$glite_conf_dir","/etc/puppet/puppet.conf"]], # Puppet needs to be set up for getting facts as modules
-        mode    => 600
+        require => [Package["java"],File["$glite_conf_dir"]],
+        subscribe => Service["puppet"], # Puppet needs to be set up for getting facts as modules
+        mode    => 600,
     }
 
     file{ "$glite_conf_dir/se-list.conf": # a single SE works for now
