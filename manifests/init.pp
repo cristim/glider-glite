@@ -5,7 +5,7 @@ define glite_node($node_type, $yum_repos, $install_yum_groups="", $inst_cert="")
     if $install_yum_groups {
         install_yum_groups{$install_yum_groups:
             subscribe => Repos[$yum_repos],
-            after => Repos[$yum_repos],
+            require => Repos[$yum_repos],
             before => Config_node["$hostname"],
         }
     }
