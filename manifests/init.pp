@@ -47,7 +47,7 @@ define config_node($node_type,
         require     => File["$glite_conf_dir"]
     }
     exec{ "$glite_conf_dir/configure.sh":
-        require     => [File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],Augeas["make_hosts_entry"]],
+        require     => [File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],Augeas["fix_etc_hosts"]],
         subscribe   => File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],
         refreshonly => true,
         timeout     => "-1",
