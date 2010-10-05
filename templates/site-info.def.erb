@@ -133,6 +133,8 @@ SITE_WEB=<%= site_web %>
 
 MY_DOMAIN=<%= site_domain %>
 SITE_OTHER_GRID="WLCG|EGEE"
+SITE_OTHER_EGEE_ROC="SEE"
+SITE_OTHER_EGEE_SERVICE="prod"
 
 <% if has_variable?("java_location") then %>
 JAVA_LOCATION="<%= java_location -%>"
@@ -148,26 +150,26 @@ REG_HOST=lcgic01.gridpp.rl.ac.uk
 CREAM_DB_USER=cream
 CREAM_DB_PASSWORD=<%= cream_passwd %>
 
-CEMON_HOST=<%= ce_host -%>.$MY_DOMAIN 
+CE_HOST=<%= ce_host -%>.$MY_DOMAIN 
 
 # Architecture and enviroment specific settings. Edit them in the ERB template.
-CE_CPU_MODEL=PIV
+CE_CPU_MODEL=Xeon
 CE_CPU_VENDOR=Intel
-CE_CPU_SPEED=3200
+CE_CPU_SPEED=2670
 CE_OS="CentOS"
-CE_OS_RELEASE="5.4"
+CE_OS_RELEASE="5.5"
 CE_OS_VERSION="Final"
 # CE_OS_ARCH should be set to result of `uname -m` runned on WN
 CE_OS_ARCH=x86_64
-CE_MINPHYSMEM=2048
-CE_MINVIRTMEM=2048
-CE_PHYSCPU=10
-CE_LOGCPU=20
-CE_SMPSIZE=2
-CE_SI00=1100
+CE_MINPHYSMEM=24576
+CE_MINVIRTMEM=0
+CE_PHYSCPU=128
+CE_LOGCPU=1024
+CE_SMPSIZE=16
+CE_SI00=2129 
 CE_SF00=1200
-CE_OUTBOUNDIP=TRUE
-CE_INBOUNDIP=FALSE
+CE_OUTBOUNDIP=FALSE
+CE_INBOUNDIP=TRUE
 CE_RUNTIMEENV="
     LCG-2
     LCG-2_1_0
@@ -181,6 +183,7 @@ CE_RUNTIMEENV="
     LCG-2_7_0
     GLITE-3_0_0
     GLITE-3_1_0
+    GLITE-3_2_0
     R-GMA
     MPICH 
     MPICH-1.2.7"
@@ -210,12 +213,16 @@ BATCH_VERSION="<%= torque_version -%>"
 
 APEL_DB_PASSWORD=<%= apel_passwd %>
 
+APEL_HOME=/opt/glite 
+
 ##########################################
 # Gridice server configuration variables #
 ##########################################
 
+CEMON_HOST=apel01.$MY_DOMAIN
+
 # GridIce server host name (usually run on the MON node).
-GRIDICE_SERVER_HOST=$MON_HOST
+GRIDICE_SERVER_HOST=$CEMON_HOST
 
 ##############################
 # RB configuration variables #
@@ -387,12 +394,13 @@ BDII_FCR="http://goc.grid-support.ac.uk/gridsite/bdii/BDII/www/bdii-update.ldif"
 
 # Advertise in BDII_REGIONS just services YOUR SITE PROVIDES! Comment out URLs
 # for services not provided!
-BDII_REGIONS="CE DPM LFC MON"    # list of the services provided by the site
+BDII_REGIONS="CREAM_CE DPM LFC APEL MPI"    # list of the services provided by the site
 
-BDII_CE_URL="ldap://$CE_HOST:2170/mds-vo-name=resource,o=grid"
+BDII_CREAM_CE_URL="ldap://$CE_HOST:2170/mds-vo-name=resource,o=grid"
 BDII_DPM_URL="ldap://$DPM_HOST:2170/mds-vo-name=resource,o=grid"
 BDII_LFC_URL="ldap://$LFC_HOST:2170/mds-vo-name=resource,o=grid"
-BDII_MON_URL="ldap://$MON_HOST:2170/mds-vo-name=resource,o=grid"
+BDII_APEL_URL="ldap://$CEMON_HOST:2170/mds-vo-name=resource,o=grid"
+BDII_MPI_URL="ldap://$CE_HOST:2170/mds-vo-name=resource,o=grid"
 
 # BDII/GIP specific settings 
 BDII_SITE_TIMEOUT=120 
@@ -466,8 +474,8 @@ SE_HOST=<%= se_host -%>.$MY_DOMAIN
 DPNS_HOST=$SE_HOST
 SITE_GIIS_URL=$SE_HOST
 SE_MOUNT_INFO_LIST="$SE_HOST:/dpm_storage,none"
-CE_CAPABILITY="CPUScalingFactorSI00=100"
-CE_OTHERDESCR="Cores=2"
+CE_CAPABILITY="CPUScalingReferenceSI00=2129"
+CE_OTHERDESCR="Cores=8, Benchmark=8.52-HEP-SPEC06"
 
 VO_SEEGRID_DEFAULT_SE=$SE_HOST
 VO_SEE_DEFAULT_SE=$SE_HOST
@@ -480,19 +488,37 @@ VO_ENV_SEE_GRID_SCI_EU_DEFAULT_SE=$SE_HOST
 #MPI configs - deea #
 #####################
 
+MPI_OPENMPI_ENABLE="yes"
 MPI_MPICH_ENABLE="yes"
+MPI_MPICH2_ENABLE="yes"
+#MPI_LAM_ENABLE="yes"
 
-<% if has_variable?("mpich_location") then %>
-MPI_MPICH_PATH="<%= mpich_location -%>"
-<% end -%>
-
-<% if has_variable?("mpich_version") then %>
-MPI_MPICH_VERSION="<%= mpich_version -%>"
-<% end -%>
+MPI_OPENMPI_PATH="/usr/lib64/openmpi/1.4-gcc"
+MPI_OPENMPI_VERSION="1.4.4"
+MPI_MPICH_PATH="/opt/mpich-1.2.7p1"
+MPI_MPICH_VERSION="1.2.7p1"
+MPI_MPICH2_PATH="/opt/mpich2-1.1.1p1"
+MPI_MPICH2_VERSION="1.1.1p1"
+#MPI_LAM_VERSION="7.1.2"
 
 MPI_SHARED_HOME="yes"
-MPI_SSH_HOST_BASED_AUTH="yes"
+MPI_SSH_HOST_BASED_AUTH="no"
 MPI_MPICH_MPIEXEC="/usr/bin/mpiexec"
 
+#<% if has_variable?("mpich_location") then %>
+#MPICH_PATH="<%= mpich_location -%>"
+#<% end -%>
 
+#<% if has_variable?("mpich_version") then %>
+#MPICH_VERSION="<%= mpich_version -%>"
+#<% end -%>
+
+#SHARED_HOME="yes"
+#SSH_HOST_BASED_AUTH="yes"
+#MPICH_MPIEXEC="/usr/bin/mpiexec"
+
+
+BLPARSER_HOST="ce01.mosigrid.utcluj.ro"
+BLAH_CHILD_POLL_TIMEOUT=200
+BLPARSER_WITH_UPDATER_NOTIFIER=true
 

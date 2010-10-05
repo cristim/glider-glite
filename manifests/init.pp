@@ -18,6 +18,9 @@ define glite_node($node_type, $yum_repos, $install_yum_groups="", $inst_cert="")
         ensure => stopped,
         enable => false,
     }
+    
+
+
 }
 
 
@@ -47,11 +50,20 @@ define config_node($node_type,
         require     => File["$glite_conf_dir"]
     }
     exec{ "$glite_conf_dir/configure.sh":
-        require     => [File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],Augeas["fix_etc_hosts"]],
+        require     => [File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"]],
         subscribe   => File["$glite_conf_dir/configure.sh","$glite_conf_dir/groups.conf",  "$glite_conf_dir/users.conf", "$glite_conf_dir/site-info.def", "$glite_conf_dir/se-list.conf", "$glite_conf_dir/wn-list.conf", "$glite_conf_dir/vo.d"],
         refreshonly => true,
         timeout     => "-1",
     }
+#   if ($hostname != "ce01") and  ($hostname != "se01") and  ($hostname != "lfc01") and ($hostname != "ui01") and  ($hostname != "apel01"){
+#    if ($hostname ==  "/wn\d+/" ) {
+#   exec { "yum -y update" :
+#     creates => "/root/system_up_to_date",
+#     path => ["/usr/bin", "/usr/sbin"],
+#     notify => Exec["$glite_conf_dir/configure.sh"],
+#     }
+#   }
+
 
     if $inst_cert == "true" {
         install_cert{"my_cert":
@@ -70,12 +82,12 @@ define config_site($vos,
         $site_domain,
         $site_loc   = "\"Cluj-Napoca, Romania\"",
         $site_web   = "http://www.utcluj.ro",
-        $site_lat   = "46",
-        $site_long  = "23",
+        $site_lat   = "46.772504",
+        $site_long  = "23.58516",
         $ce_host    = "ce01",
         $se_host    = "se01",
         $dpm_host   = "se01",
-        $mon_host   = "mon01",
+        $mon_host   = "apel01",
         $lfc_host   = "lfc01",
         $wn_prefix  =   "wn",
         $wn_digits  =   "2",
